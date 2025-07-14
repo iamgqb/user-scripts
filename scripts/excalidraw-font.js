@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         excalidraw Font
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  Replaces the default Excalidraw font with JasonHandwriting.
+// @version      1.1
+// @description  Replaces the default Excalidraw font with online url.
 // @author       You
 // @match        https://excalidraw.com/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=excalidraw.com
