@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         excalidraw Font
 // @namespace    http://tampermonkey.net/
-// @version      2025-02-13
+// @version      1.0
 // @description  Replaces the default Excalidraw font with JasonHandwriting.
 // @author       You
 // @match        https://excalidraw.com/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=excalidraw.com
+// @updateURL    https://raw.githubusercontent.com/iamgqb/user-scripts/refs/heads/master/scripts/excalidraw-font.js
+// @downloadURL  https://raw.githubusercontent.com/iamgqb/user-scripts/refs/heads/master/scripts/excalidraw-font.js
 // @grant        GM_addStyle
 // @run-at       document-start
 // ==/UserScript==
