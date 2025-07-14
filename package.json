@@ -1,6 +1,6 @@
 {
   "name": "user-scripts",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "This repository contains a collection of Tampermonkey scripts.",
   "main": "index.js",
   "type": "module",
@@ -17,7 +17,7 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
     "husky": "^4.3.8",
-    "lint-staged": "^16.1.2",
+    "lint-staged": "^13.3.0",
     "prettier": "^3.6.2"
   },
   "husky": {
@@ -26,6 +26,6 @@
     }
   },
   "lint-staged": {
-    "*.js": "prettier --write"
+    "scripts/**/*.js": "prettier --write"
   }
 }

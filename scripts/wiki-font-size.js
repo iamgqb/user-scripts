@@ -22,7 +22,8 @@
 
     const FONT_SIZE_STORAGE_KEY = 'gm_font_size';
     const htmlEle = document.documentElement;
-    let currentSize = Number(localStorage.getItem(FONT_SIZE_STORAGE_KEY)) || 100;
+    let currentSize =
+        Number(localStorage.getItem(FONT_SIZE_STORAGE_KEY)) || 100;
 
     function setSize(size) {
         htmlEle.style.fontSize = `${size}%`;
