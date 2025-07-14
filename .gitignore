@@ -1,0 +1,13 @@
+# IDE files
+.idea/
+.vscode/
+
+# Node modules
+node_modules/
+
+# Build files
+dist/
+build/
+
+# Log files
+*.log
