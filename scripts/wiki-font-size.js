@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  Change Wiki FontSize!
-// @author       You
+// @author       iamgqb
 // @match        https://**.wikipedia.org/**
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=wikipedia.org
 // @updateURL    https://raw.githubusercontent.com/iamgqb/user-scripts/refs/heads/master/scripts/wiki-font-size.js

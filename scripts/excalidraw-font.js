@@ -3,8 +3,8 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.1
 // @description  Replaces the default Excalidraw font with online url.
-// @author       You
-// @match        https://excalidraw.com/
+// @author       iamgqb
+// @match        https://excalidraw.com/** */
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=excalidraw.com
 // @updateURL    https://raw.githubusercontent.com/iamgqb/user-scripts/refs/heads/master/scripts/excalidraw-font.js
 // @downloadURL  https://raw.githubusercontent.com/iamgqb/user-scripts/refs/heads/master/scripts/excalidraw-font.js
