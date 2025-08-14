@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         gitlab helper
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.3
 // @description  gitlab helper
 // @author       iamgqb
 // @match        https://gitlab.qunhequnhe.com/**
@@ -19,17 +19,15 @@
      * 1.1 确保 href 符合 https://gitlab.qunhequnhe.com/{anypaht}/merge_requests/{number}/{otherpath} 的形式，否则停止
      * 1.2 从 href 中提取出 targetUrl, 如下 https://gitlab.qunhequnhe.com/{anypaht}/merge_requests/{number}
      *
-     * 2 从 document 中的 a 标签中提取 commit id
-     * 2.1 从 document 中提取所有带有 title 的 a 标签
-     * 2.2 获取 targetAnchor，为 a 标签的 title 符合 revert-{number} 或者 cherry-pick-{number} 的形式
-     * 2.3 提取这个number 为 commitId
+     * 2 在页面第一个 div.detail-page-description 中寻找 a 标签的 title 符合 revert-{number} 或者 cherry-pick-{number} 的形式
+     * 2.1 如果找不到则停止，不再执行下面的逻辑
      *
-     * 3 拼接 URL 并获取结果
-     * 3.1 拼接 fetchUrl 为 `${url}/context_commits.json?search=${commitId}&per_page=40`
-     * 3.2 通过 fetch 请求结果, 结果为 json 格式的数组
-     * 3.3 获取数组的第一项，如果存在，获取它的 commit_url
+     * 3 请求 ${targetUrl}/commits.json
+     * 3.1 这个请求会返回一个 {html: string} 这样的 json，html 属性中的值是一段 html 字符串片段
+     * 3.2 我需要从中提取出第一个带有 data-merge-request 的 a 标签，定义为 targetAnchor
+     * 3.3 取出 targetAnchor 的 href，定义为 targetMr
      *
-     * 4 在 targetAnchor 后添加一个 a 标签，href 为 commit_url
+     * 4 在页面第一个 div.detail-page-description 的最后添加一个 a 标签，内容为 (View Origin MR)，指向链接为 targetMr
      **/
 
     const href = window.location.href;
@@ -43,42 +41,41 @@
 
     const targetUrl = match[1];
 
-    const anchors = Array.from(document.querySelectorAll('a[title]'));
-    const commitRegex = /(?:revert|cherry-pick)-(\w+)/;
-    let targetAnchor = null;
-    let commitId = null;
-
-    for (const anchor of anchors) {
-        const titleMatch = anchor.title.match(commitRegex);
-        if (titleMatch) {
-            targetAnchor = anchor;
-            commitId = titleMatch[1];
-            break;
-        }
-    }
-
-    if (!commitId || !targetAnchor) {
+    const descriptionDiv = document.querySelector(
+        'div.detail-page-description'
+    );
+    if (!descriptionDiv) {
         return;
     }
 
-    const fetchUrl = `${targetUrl}/context_commits.json?search=${commitId}&per_page=40`;
+    const commitLink = descriptionDiv.querySelector(
+        'a[title*="revert-"], a[title*="cherry-pick-"]'
+    );
+    if (!commitLink) {
+        return;
+    }
 
-    fetch(fetchUrl)
+    const commitsUrl = `${targetUrl}/commits.json`;
+
+    fetch(commitsUrl)
         .then((response) => response.json())
         .then((data) => {
-            if (data && data.length > 0) {
-                const commitUrl = data[0].commit_url;
-                if (commitUrl) {
+            if (data && data.html) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data.html, 'text/html');
+                const targetAnchor = doc.querySelector('a[data-merge-request]');
+
+                if (targetAnchor) {
+                    const targetMr = targetAnchor.href;
                     const newAnchor = document.createElement('a');
-                    newAnchor.href = commitUrl;
-                    newAnchor.textContent = ' (View Origin Commit)';
+                    newAnchor.href = targetMr;
+                    newAnchor.textContent = ' (View Origin MR)';
                     newAnchor.target = '_blank';
-                    targetAnchor.parentNode.insertBefore(
-                        newAnchor,
-                        targetAnchor.nextSibling
-                    );
+                    newAnchor.style.marginLeft = '4px';
+
+                    descriptionDiv.appendChild(newAnchor);
                 }
             }
         })
-        .catch((error) => console.error('Error fetching commit URL:', error));
+        .catch((error) => console.error('Error fetching commits:', error));
 })();
